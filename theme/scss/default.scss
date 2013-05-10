@@ -2,7 +2,7 @@
 @import "compass/css3/columns";
 @import "compass/css3/user-interface";
 
-$social-tags: '#yourhashtag';
+$social-tags: '#drupalcon #rest';
 $brand-small-icon-size: 30px;
 
 $gray-1: #e6e6e6;
@@ -50,7 +50,14 @@ $article-content-top-padding: 45px;
   background-color: white;
 }
 
-
+@mixin callout-box {
+  @include border-radius(10px, 10px);
+  background-color: white;
+  border: #a9a9a9 solid 1px;
+  margin-bottom: 20px;
+  padding: 20px;
+  width: 45%;
+}
 
 /**
  * Theme Styles
@@ -174,7 +181,7 @@ slides > slide {
       position: absolute;
       bottom: $slide-top-bottom-padding / 2;
       left: $slide-left-right-padding;
-      background: url(../../images/google_developers_icon_128.png) no-repeat 0 50%;
+      background: url(../../images/drupalcon_pdx_icon_2.png) no-repeat 0 50%;
       @include background-size($brand-small-icon-size $brand-small-icon-size);
       padding-left: $brand-small-icon-size + 10;
       height: $brand-small-icon-size;
@@ -347,15 +354,17 @@ ul {
     }
   }
 
+  ul {
+    margin-top: .5em;
+  }
+}
+
+ul:not(.no-bullet) {
   > li:before {
     content: '\00B7';
     margin-left: -1em;
     position: absolute;
     font-weight: 600;
-  }
-
-  ul {
-    margin-top: .5em;
   }
 }
 
@@ -1085,4 +1094,25 @@ aside.gdbar {
   pre, code {
     font-family: monospace !important;
   }
+}
+
+span.mark {
+  border: 3px solid red;
+}
+
+.image-annotation {
+  @include callout-box;
+  float: right;
+
+  dt {
+    width: 45%;
+  }
+
+  dd {
+    width: 40%;
+  }
+}
+
+div.normalizer {
+  @include callout-box;
 }
