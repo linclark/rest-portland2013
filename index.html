@@ -207,6 +207,7 @@ URL: https://code.google.com/p/io-2012-slides
     <aside class="gdbar"></aside>
     <hgroup class="auto-fadein">
       <h2>REST in Drupal</h2>
+      <h3>How we implement those standards</h3>
     </hgroup>
   </slide>
 
@@ -235,13 +236,42 @@ URL: https://code.google.com/p/io-2012-slides
 
   <slide>
     <hgroup>
-      <h2>Modules in Drupal 7 contrib</h2>
+      <h2>Modules in Drupal 7 contrib: Services</h2>
     </hgroup>
     <article>
       <ul>
-        <li>Services</li>
-        <li>RESTWS</li>
-        <li>Services Entity API</li>
+        <li><a href="http://drupal.org/project/services">http://drupal.org/project/services</a>
+        <li>Endpoint concept with custom URL paths</li>
+        <li>Caters for RPC and SOAP also</li>
+        <li>Uses drupal_form_submit() for write operations</li>
+        <li>Only covers hard coded entities like nodes, comments, users</li>
+        <li>Explicit authentication info hooks.</li>
+        <li>No hypermedia controls</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Drupal 7 contrib: RESTWS and Services Entity API</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li><b>RESTWS</b> <a href="http://drupal.org/project/restws">http://drupal.org/project/restws</a>
+          <ul>
+            <li>Relies on Entity API and metadata about entities</li>
+            <li>No endpoints: uses /node/1.json or /node/1.xml</li>
+            <li>No configuration: exposes any entity type out of the box</li>
+            <li>Access control on top of Entity API and Field API</li>
+            <li>Standard user authentication over session cookies or HTTP Basic Auth submodule</li>
+          </ul>
+        </li>
+        <li><b>Services Entity API</b> <a href="http://drupal.org/project/services_entity">http://drupal.org/project/services_entity</a>
+          <ul>
+            <li>Combines approaches from Services and RESTWS</li>
+            <li>Configurable endpoints + Entity API for data management</li>
+          </ul>
+        </li>
       </ul>
     </article>
   </slide>
@@ -267,14 +297,25 @@ URL: https://code.google.com/p/io-2012-slides
       <ul>
         <li>A resource is the object of interest. Example: the node resource</li>
         <li>An operation is an action to read or manipulate a resource.
-          <ul>
-            <li>Create: HTTP POST /entity/node</li>
-            <li>Read: HTTP GET /entity/node/1</li>
-            <li>Update: HTTP PATCH /entity/node/1</li>
-            <li>Delete: HTTP DELETE /entity/node/1</li>
-          </ul>
         </li>
       </ul>
+      <table>
+        <tr>
+          <th>Operation</th><th>HTTP request method</th><th>path</th>
+        </tr>
+        <tr>
+          <td>Create</td><td>POST</td><td>/entity/node</td>
+        </tr>
+        <tr>
+          <td>Read</td><td>GET</td><td>/entity/node/1</td>
+        </tr>
+        <tr>
+          <td>Update</td><td>PATCH</td><td>/entity/node/1</td>
+        </tr>
+        <tr>
+          <td>Delete</td><td>DELETE</td><td>/entity/node/1</td>
+        </tr>
+      </table>
     </article>
   </slide>
 
@@ -530,6 +571,29 @@ $client->post('entity/node', array(
     </hgroup>
   </slide>
 
+  <slide>
+    <hgroup>
+      <h2>Building lists with Views</h2>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Views is a configurable query builder in Drupal 8 core</li>
+        <li>Display plugin that renders Views data with Serializer</li>
+        <li>Comparable to Views Datasource in Drupal 7 <a href="http://drupal.org/project/views_datasource">http://drupal.org/project/views_datasource</a></li>
+        <li>Support for outputting whole entities</li>
+        <li>Show only selected fields for one entity item</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide>
+    <section>
+      <video src="videos/rest-views.mp4" width="97%" style="position: absolute; left: 1.5%; top:0px;" controls preload="auto">
+        <p>Your browser doesn't support HTML5 video. <a href="videos/rest-views.mp4">Download the video</a>.</p>
+      </video>
+    </section>
+  </slide>
+
   <slide class="segue dark nobackground">
     <aside class="gdbar"></aside>
     <hgroup class="auto-fadein">
@@ -701,7 +765,15 @@ class DBLogResource extends ResourceBase {
     </article>
   </slide>
 
-  <!-- Comparision to Services -->
+  <slide>
+    <hgroup>
+      <h2>REST request pipeline</h2>
+    </hgroup>
+    <article>
+      <img src="images/rest_pipeline.svg">
+    </article>
+  </slide>
+
   <!--<slide>
     <hgroup>
       <h2>Endpoints</h2>
@@ -983,7 +1055,7 @@ $cancel_url = $base . '/slots/' . $appt['id'] . '/appointment';
     <div>but what if the server changes its URI structure?</div>
     <div>Instead, get the URI from the links.</div>
 <pre class="prettyprint" data-lang="php">
-$cancel_url = $appt['cancel']['uri'];
+$cancel_url = $appt['http://med.org/rels/cancel']['uri'];
 </pre>
     </article>
   </slide>
@@ -1008,20 +1080,14 @@ $cancel_url = $appt['cancel']['uri'];
   </slide>
 
   <slide class="thank-you-slide segue nobackground">
-    <aside class="gdbar right"><img src="images/google_developers_icon_128.png"></aside>
+    <aside class="gdbar right"><img src="images/drupalcon_pdx_icon_2.png"></aside>
     <article class="flexbox vleft auto-fadein">
-      <h2>&lt;Thank You!&gt;</h2>
-      <p>Important contact information goes here.</p>
+      <h2>Questions?</h2>
+      <p>What did you think? Evaluate this session at: portland2013.drupal.org/schedule</p>
     </article>
     <p class="auto-fadein" data-config-contact>
       <!-- populated from slide_config.json -->
     </p>
-  </slide>
-
-  <slide class="logoslide dark nobackground">
-    <article class="flexbox vcenter">
-      <span><img src="images/google_developers_logo_white.png"></span>
-    </article>
   </slide>
 
   <slide class="backdrop"></slide>
