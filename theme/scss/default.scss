@@ -2,7 +2,7 @@
 @import "compass/css3/columns";
 @import "compass/css3/user-interface";
 
-$social-tags: '#drupalcon #rest';
+$social-tags: '#rest';
 $brand-small-icon-size: 30px;
 
 $gray-1: #e6e6e6;
@@ -50,13 +50,25 @@ $article-content-top-padding: 45px;
   background-color: white;
 }
 
-@mixin callout-box {
+@mixin box-base {
   @include border-radius(10px, 10px);
   background-color: white;
   border: #a9a9a9 solid 1px;
   margin-bottom: 20px;
   padding: 20px;
-  width: 45%;
+}
+
+@mixin callout-box {
+  @include box-base;
+  width: 55%;
+}
+
+@mixin my-flex() {
+  display: -webkit-flex;
+  display: flex;
+  img {
+    width: 100%;
+  }
 }
 
 /**
@@ -607,6 +619,14 @@ article.smaller {
   }
 }
 
+article.bigger {
+  p, ul {
+    font-size: 35px;
+    line-height: 40px;
+    letter-spacing: 0;
+  }
+}
+
 /* Builds */
 
 .build {
@@ -618,12 +638,8 @@ article.smaller {
     opacity: 0;
   }
 
-  .build-fade {
-    opacity: 0.3;
-
-    &:hover {
-      opacity: 1.0;
-    }
+  .build-fade.supportsNormalization {
+      opacity: 0;
   }
 }
 
@@ -1100,26 +1116,61 @@ span.mark {
   border: 3px solid red;
 }
 
+.wrapping-box {
+  @include box-base;
+}
+
+.right-wrong {
+  border-top: gray dashed 2px;
+  padding-top: 20px;
+}
+
 .image-annotation {
   @include callout-box;
-  float: right;
+  position: absolute;
+  right:50px;
+  z-index: 100;
 
   dt {
     width: 45%;
   }
 
   dd {
-    width: 40%;
+    width: 50%;
   }
 }
 
 div.normalizer {
-  @include callout-box;
+  @include box-base;
+  font-size: .8em;
+  width: 350px;
+}
+
+.label {
+  font-size: 14px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.intro-walkthrough {
+  @include my-flex;
+  section {
+    flex:1;
+    min-width: 35%;
+    max-width: 35%;
+    -webkit-order: 2;
+  }
+  section:first-of-type {
+    -webkit-order: 0;
+  }
+  section:last-of-type {
+    flex: 2;
+    -webkit-order: 1;
+  }
 }
 
 .api-walkthrough {
-  display: -webkit-flex;
-  display: flex;
+  @include my-flex;
   section:first-of-type {
     flex:1;
     -webkit-order: 1;
@@ -1129,7 +1180,40 @@ div.normalizer {
     min-width: 70%;
     -webkit-order: 0;
   }
+}
+
+.two-col {
+  @include my-flex;
+  > div {
+    min-width: 50%;
+  }
+}
+
+.supportsNormalization {
+  position: absolute;
+  left: 480px;
+  width: 40%;
+
   img {
     width: 100%;
   }
+}
+
+blockquote {
+  background:#f9f9f9;
+  border-left:10px solid #ccc;
+  margin:1.5em 10px;
+  padding:.5em 10px;
+  quotes:"\201C""\201D""\2018""\2019";
+}
+blockquote:before {
+  color:#ccc;
+  content:"\201C";
+  font-size:4em;
+  line-height:.1em;
+  margin-right:.25em;
+  vertical-align:-.4em;
+}
+blockquote p {
+  display:inline;
 }
